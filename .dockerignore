@@ -1,0 +1,11 @@
+!package.json
+!requirements.txt
+!LICENSE
+
+**/Dockerfile
+**/.dockerignore
+
+**/docker-compose.yml
+**/.gitignore
+**/.gcloudignore
+**/.ssh/
