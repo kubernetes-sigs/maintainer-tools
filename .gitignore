@@ -1,0 +1,28 @@
+# Binary
+bin/
+.build/
+
+# Log files
+*.log
+trace.log
+prompt.log
+app.log
+
+# OS specific files
+.DS_Store
+.env
+
+# IDE specific files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Go specific
+*.exe
+*.test
+*.prof
+*.out
+.aider*
+# Added by goreleaser init:
+dist/
