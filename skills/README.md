@@ -16,7 +16,8 @@ Skills are organized into subdirectories, each representing a distinct skill. A 
 
 ## Available Skills
 
-*(None yet. Add your skill here!)*
+- [`commit-from-changes`](./commit-from-changes/SKILL.md): Stage and commit changes with a Kubernetes-style commit message.
+- [`create-pr-from-template`](./create-pr-from-template/SKILL.md): Create a GitHub pull request from the current branch using the repository's PR template when available.
 
 ## Contributing
 

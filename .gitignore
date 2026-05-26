@@ -1,6 +1,7 @@
 # Binary
 bin/
 .build/
+_artifacts/
 
 # Log files
 *.log
