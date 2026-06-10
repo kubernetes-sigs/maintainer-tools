@@ -1,0 +1,24 @@
+# See https://cloud.google.com/cloud-build/docs/build-config
+# See https://github.com/kubernetes/test-infra/blob/master/config/jobs/image-pushing/README.md
+
+timeout: 1800s
+options:
+  substitution_option: ALLOW_LOOSE
+  enableStructuredLogging: true
+  # Using a more powerful machine type can speed up docker builds.
+  machineType: "E2_HIGHCPU_8"
+steps:
+  - name: gcr.io/k8s-staging-test-infra/gcb-docker-gcloud:v20260205-38cfa9523f
+    entrypoint: /buildx-entrypoint
+    args:
+      - build
+      - --tag=gcr.io/$PROJECT_ID/antigravity:$_GIT_TAG
+      - --tag=gcr.io/$PROJECT_ID/antigravity:latest
+      - --cache-from=type=registry,ref=gcr.io/$PROJECT_ID/antigravity:latest
+      - --cache-to=type=registry,ref=gcr.io/$PROJECT_ID/antigravity:latest,mode=max
+      - --platform=linux/amd64,linux/arm64
+      - --output=type=registry
+      - .
+substitutions:
+  _GIT_TAG: '12345'
+  _PULL_BASE_REF: 'main'
