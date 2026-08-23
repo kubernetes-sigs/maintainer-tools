@@ -59,10 +59,9 @@ RUN apt-get update \
 
 COPY --from=agy-build /home/agy/.local/bin/agy /usr/local/bin/agy
 
-RUN mkdir /workspace && chown agy:agy /workspace
+WORKDIR /workspace
+RUN chown agy:agy /workspace
 
 USER agy
-WORKDIR /workspace
-
 # No ENTRYPOINT: both `agy` and `gh` are on PATH, so callers pick the tool.
 CMD ["bash"]

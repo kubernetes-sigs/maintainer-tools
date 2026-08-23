@@ -14,8 +14,8 @@ steps:
       - build
       - --tag=gcr.io/$PROJECT_ID/antigravity:$_GIT_TAG
       - --tag=gcr.io/$PROJECT_ID/antigravity:latest
-      - --cache-from=type=registry,ref=gcr.io/$PROJECT_ID/antigravity:latest
-      - --cache-to=type=registry,ref=gcr.io/$PROJECT_ID/antigravity:latest,mode=max
+      - --cache-from=type=registry,ref=gcr.io/$PROJECT_ID/antigravity:buildcache
+      - --cache-to=type=registry,ref=gcr.io/$PROJECT_ID/antigravity:buildcache,mode=max
       - --platform=linux/amd64,linux/arm64
       - --output=type=registry
       - .
