@@ -1,4 +1,5 @@
-# OCI image bundling the Antigravity CLI (`agy`) and the GitHub CLI (`gh`).
+# OCI image bundling the Antigravity CLI (`agy`), the GitHub CLI (`gh`), and a
+# Go toolchain so agents can analyze Go repositories (e.g. `go list`).
 #
 # Antigravity install script: https://antigravity.google/cli/install.sh
 # It auto-detects platform (linux amd64/arm64, glibc vs musl), verifies a
@@ -7,6 +8,9 @@
 #
 # `gh` is installed from the official GitHub CLI apt repository so we get
 # verified packages and easy multi-arch support.
+#
+# Go is installed from the official https://go.dev/dl/ tarball matching the
+# target architecture, verified against the SHA256 that go.dev publishes.
 
 # Stage 1: run the official Antigravity installer to fetch and verify the binary.
 FROM debian:stable-slim AS agy-build
@@ -26,7 +30,7 @@ RUN curl -fsSL https://antigravity.google/cli/install.sh -o install.sh \
     && bash install.sh \
     && test -x "$HOME/.local/bin/agy"
 
-# Stage 2: minimal runtime image with both CLIs.
+# Stage 2: minimal runtime image with the CLIs and Go.
 FROM debian:stable-slim
 
 # Install gh and google-cloud-sdk from official apt repos. Follows upstream docs:
@@ -56,6 +60,18 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/* \
     && groupadd -g 1000 agy \
     && useradd -u 1000 -g 1000 --create-home --shell /bin/bash agy
+
+# Keep GO_VERSION in line with the Go repos agents work on (e.g. kops' go.mod).
+ARG GO_VERSION=1.27.1
+RUN TARBALL="go${GO_VERSION}.linux-$(dpkg --print-architecture).tar.gz" \
+    && SHA256="$(curl -fsSL 'https://go.dev/dl/?mode=json&include=all' \
+        | jq -r --arg file "${TARBALL}" '.[].files[] | select(.filename == $file) | .sha256')" \
+    && test -n "${SHA256}" \
+    && curl -fsSL "https://go.dev/dl/${TARBALL}" -o "/tmp/${TARBALL}" \
+    && echo "${SHA256}  /tmp/${TARBALL}" | sha256sum -c - \
+    && tar -C /usr/local -xzf "/tmp/${TARBALL}" \
+    && rm "/tmp/${TARBALL}"
+ENV PATH="/usr/local/go/bin:${PATH}"
 
 COPY --from=agy-build /home/agy/.local/bin/agy /usr/local/bin/agy
 
