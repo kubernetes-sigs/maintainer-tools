@@ -37,7 +37,7 @@ FROM debian:stable-slim
 # - https://github.com/cli/cli/blob/trunk/docs/install_linux.md
 # - https://cloud.google.com/sdk/docs/install#deb
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends ca-certificates curl gnupg git jq \
+    && apt-get install -y --no-install-recommends ca-certificates curl gnupg git jq ripgrep \
     && install -dm 755 /etc/apt/keyrings \
     # Install GitHub CLI repository
     && curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg \
