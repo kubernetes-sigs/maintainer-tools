@@ -26,14 +26,17 @@ WORKDIR /home/agy
 
 # Keep the script on disk rather than piping curl|bash so we get a clean exit
 # code and the script is auditable from a running container if needed.
+# CACHE_BUST invalidates the registry buildcache for this step on each build so
+# periodic runs always fetch the latest upstream `agy` release.
+ARG CACHE_BUST
 RUN curl -fsSL https://antigravity.google/cli/install.sh -o install.sh \
     && bash install.sh \
-    && test -x "$HOME/.local/bin/agy"
+    && "$HOME/.local/bin/agy" --version
 
 # Stage 2: minimal runtime image with the CLIs and Go.
 FROM debian:stable-slim
 
-# Install gh and google-cloud-sdk from official apt repos. Follows upstream docs:
+# Install gh and google-cloud-cli from official apt repos. Follows upstream docs:
 # - https://github.com/cli/cli/blob/trunk/docs/install_linux.md
 # - https://cloud.google.com/sdk/docs/install#deb
 RUN apt-get update \
@@ -46,13 +49,13 @@ RUN apt-get update \
     && echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" \
         > /etc/apt/sources.list.d/github-cli.list \
     # Install Google Cloud CLI repository
-    && echo "deb [signed-by=/etc/apt/keyrings/cloud.google.gpg] http://packages.cloud.google.com/apt cloud-sdk main" \
+    && echo "deb [signed-by=/etc/apt/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" \
         > /etc/apt/sources.list.d/google-cloud-sdk.list \
     && curl -fsSL https://packages.cloud.google.com/apt/doc/apt-key.gpg \
         | gpg --dearmor > /etc/apt/keyrings/cloud.google.gpg \
     # Install both CLIs and yq
     && apt-get update \
-    && apt-get install -y --no-install-recommends gh google-cloud-sdk \
+    && apt-get install -y --no-install-recommends gh google-cloud-cli \
     && ARCH="$(dpkg --print-architecture | sed 's/amd64/linux_amd64/;s/arm64/linux_arm64/;s/armhf/linux_arm/')" \
     && curl -fsSL "https://github.com/mikefarah/yq/releases/download/v4.44.1/yq_${ARCH}" -o /usr/local/bin/yq \
     && chmod +x /usr/local/bin/yq \
