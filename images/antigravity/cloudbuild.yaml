@@ -12,6 +12,7 @@ steps:
     entrypoint: /buildx-entrypoint
     args:
       - build
+      - --build-arg=CACHE_BUST=$_GIT_TAG
       - --tag=gcr.io/$PROJECT_ID/antigravity:$_GIT_TAG
       - --tag=gcr.io/$PROJECT_ID/antigravity:latest
       - --cache-from=type=registry,ref=gcr.io/$PROJECT_ID/antigravity:buildcache
