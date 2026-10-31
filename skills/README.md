@@ -6,6 +6,19 @@ This directory contains shared AI agent skills for OSS Kubernetes development.
 
 Agent skills are specialized instructions, guidelines, and tools that AI agents use to assist with software development and maintenance tasks. They help ensure that AI agents follow project conventions, best practices, and security guidelines.
 
+## Installation
+
+Install skills into your project or global agent environment using the [`skills`](https://www.npmjs.com/package/skills) CLI:
+
+```bash
+# List available skills in this repository
+npx skills add kubernetes-sigs/maintainer-tools --list
+
+# Install a specific skill
+npx skills add kubernetes-sigs/maintainer-tools --skill commit-from-changes
+npx skills add kubernetes-sigs/maintainer-tools --skill create-pr-from-template
+```
+
 ## Structure
 
 Skills are organized into subdirectories, each representing a distinct skill. A skill directory typically contains:
@@ -28,4 +41,5 @@ To contribute a new skill:
 2. Add a `SKILL.md` file with the required frontmatter and clear instructions.
 3. Add any necessary reference files or scripts.
 4. Update this README to list the new skill.
-5. Open a Pull Request.
+5. Run `make verify` to lint and validate installation with `npx skills`.
+6. Open a Pull Request.
