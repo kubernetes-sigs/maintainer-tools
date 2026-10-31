@@ -18,6 +18,7 @@ Skills are organized into subdirectories, each representing a distinct skill. A 
 
 - [`commit-from-changes`](./commit-from-changes/SKILL.md): Stage and commit changes with a Kubernetes-style commit message.
 - [`create-pr-from-template`](./create-pr-from-template/SKILL.md): Create a GitHub pull request from the current branch using the repository's PR template when available.
+- [`prow-job-browse-artifacts`](./prow-job-browse-artifacts/SKILL.md): Download, extract, and browse Prow CI job artifacts from prow.k8s.io or local directories.
 
 ## Contributing
 
