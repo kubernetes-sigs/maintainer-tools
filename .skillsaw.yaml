@@ -24,13 +24,13 @@ rules:
 
   # Skill directories should only contain recognized subdirectories (stricter than spec)
   agentskill-structure:
-    enabled: false
+    enabled: true
     severity: warning
-    # allowed_dirs:
-    #   - assets
-    #   - evals
-    #   - references
-    #   - scripts
+    allowed_dirs:
+      - assets
+      - evals
+      - references
+      - scripts
 
   # Require evals/evals.json for each skill (opt-in)
   agentskill-evals-required:
